@@ -1,0 +1,87 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>检测记录</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <link rel="stylesheet" href="~/Layuiadmin/layui/css/layui.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Layuiadmin/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+</head>
+<body>
+    <div>
+        <table class="layui-table" id="idTest" lay-filter="demo">
+        </table>
+        @* 打印工具栏*@
+        <script type="text/html" id="printtool">
+            <div class="layui-table-tool-self">
+                <div class="layui-inline" title="筛选列" lay-event="LAYTABLE_COLS"><i class="layui-icon layui-icon-cols"></i></div>
+                <div class="layui-inline" title="导出" lay-event="LAYTABLE_EXPORT"><i class="layui-icon layui-icon-export"></i></div>
+                <div class="layui-inline" title="打印" lay-event="LAYTABLE_PRINT"><i class="layui-icon layui-icon-print"></i></div>
+            </div>
+        </script>
+    </div>
+    <script>
+        layui.use('util', function () {
+
+            // 格式化指定时间的函数
+            // data：时间对象
+            function dateFormat(date) {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth();
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+                // 返回yyyy-MM-dd格式的日期字符串
+                return year + "-" + month + "-" + day;
+            }
+
+            layui.use('table', function () {
+                var table = layui.table;
+                // 第一个实例
+                table.render({
+                    elem: '#idTest' // 挂载的元素
+                    , height: 312,
+                    url: '/DetectionRecordManagement/Cust_Paging' //数据接口
+                    , toolbar: "#toolbarDemo"
+                    , page: true //开启分页
+                    , toolbar: '#printtool' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                    , totalRow: true //开启合计行
+                    , title: '检测记录报表'
+                    , cols: [[ //表头
+                        { field: 'Dname', title: '项目名称' },
+                        { field: 'Util', title: '单位' },
+                        { field: 'ShouSuoYa', title: '收缩压' },
+                        { field: 'ShuZhangYa', title: '舒张压' },
+                        { field: 'Bnane', title: '分店名' },
+                        { field: 'Method', title: '检验方法' },
+                        { field: 'Decipher', title: '结果解读',width:300},
+                        {
+                            field: 'LastTime', title: '检验时间', sort: true, templet: function (d) {
+                                // 后台传递过来的时间数据为/Date[时间戳]/，使用正则获取其中的时间戳(match匹配的数据是数组)
+                                // 并将它们合并成一个时间戳字符串然后转换为Int类型(必须要将时间戳转换为Int类型，不然会变成NaN)
+                                let timeshijianchuo = parseInt(d["LastTime"].match(/[0-9]/ig).join(''));
+                                // 将时间戳作为Date()构造器的参数，可以得到对应时间戳的日期对象
+                                var date = dateFormat(new Date(timeshijianchuo))
+                                return '<div>' + date + '</div>'
+                            }
+                        },
+                    ]],
+                    limit: 5,   // 每页几条记录
+                    limits: [5, 10, 15, 20],    // 可供选择的记录条数
+                });
+            })
+
+        })
+
+    </script>
+</body>
+</html>

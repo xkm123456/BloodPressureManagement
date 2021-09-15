@@ -1,0 +1,195 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sinocares</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="layui-anim layui-anim-up">
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a>
+                <cite>检测记录</cite>
+            </a>
+        </span>
+    </div>
+    <div class="x-body">
+        <div class="layui-row layui-bg-gray">
+            <br />
+            <form class="layui-form layui-col-md12 x-so" style="width: 1000px;">
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	联系电话</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" placeholder="请输入" name="Phone" lay-verify="phone|required">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	检测时段</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" placeholder="2019-10-11" lay-verify="required" name="start" id="start">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" placeholder="2019-11-21" lay-verify="required" name="end" id="end">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	所属分店</label>
+                    <div class="layui-input-inline">
+                        <select name="branch" lay-filter="province">
+                            @foreach (var item in ViewBag.Branch as List<BloodPressureManagement.Models.Branch>)
+                            {
+                                <option value="@item.Bid">@item.Bnane</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <br />
+                <div class="layui-inline" style="margin-left:1040px; margin-top: -62px; ">
+                    <button class="layui-btn" lay-submit lay-filter="btnsreach" style="float:right;margin-right:20px"><i class="layui-icon">&#xe615;</i>查询</button>
+                </div>
+            </form>
+        </div>
+
+        <table class="layui-table" id="idTest" lay-filter="demo">
+        </table>
+
+    </div>
+
+    <script>
+
+        // 指定姓名、电话、分店查找指定用户
+        //function findExaminer() {
+        //    // 获取姓名、电话、分店id
+        //    var name = $("input[name=Cname]").val();
+        //    var phone = $("input[name=Cphone]").val();
+        //    var branch = $("#branch").val();
+
+        //    layui.use('table', function () {
+        //        var table = layui.table;
+        //        // 表格重载
+        //        table.reload('idTest', {
+        //            url: '/DetectionRecordManagement/Examiner_Find'
+        //            , where: {
+        //                "cname": name,
+        //                "cphone": phone,
+        //                "bid": branch
+        //            }
+        //        });
+        //    })
+        //}
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+        });
+        layui.use('form', function () {
+            var form = layui.form;
+
+            // 表单提交事件
+            form.on('submit(btnsreach)', function (data) {
+                let form_data = data.field; //当前容器的全部表单字段，名值对形式：{name: value}
+                // 获取电话，检测时段，分店id
+                let phone = form_data.Phone;
+                let start_time = form_data.start;
+                let end_time = form_data.end;
+                let branchid = form_data.branch;
+
+                layui.use('table', function () {
+                    var table = layui.table;
+                    // 表格重载
+                    table.reload('idTest', {
+                        url: '/DetectionRecordManagement/Jiancejilu_Find'
+                        , where: {
+                            "phone": phone,
+                            "start_time": start_time,
+                            "end_time": end_time,
+                            "branchid": branchid
+                        }
+                    });
+                })
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+        // 分页
+        layui.use('util', function () {
+
+            // 格式化指定时间的函数
+            // data：时间对象
+            function dateFormat(date) {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + date.getMonth() : date.getMonth();
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+                // 返回yyyy-MM-dd格式的日期字符串
+                return year + "-" + month + "-" + day;
+            }
+
+            layui.use('table', function () {
+                var table = layui.table;
+                // 第一个实例
+                table.render({
+                    elem: '#idTest' // 挂载的元素
+                    , height: 312
+                    , url: '/DetectionRecordManagement/Jiancejilu_Paging' //数据接口
+                    , page: true //开启分页
+                    , cols: [[ //表头
+                        { field: 'Uname', title: '检测者名称' },
+                        { field: 'Usex', title: '性别' },
+                        {
+                            field: 'Uage', title: '年龄', sort: true, templet: function (d) {
+                                return "<div>"+ d.Uage + "岁" +"</div>"
+                            }
+                        },
+                        { field: 'Phone', title: '电话' },
+                        { field: 'Bnane', title: '分店名称' },
+                        {
+                            field: 'LastTime', title: '检测时间', sort: true, templet: function (d) {
+                                // 后台传递过来的时间数据为/Date[时间戳]/，使用正则获取其中的时间戳(match匹配的数据是数组)
+                                // 并将它们合并成一个时间戳字符串然后转换为Int类型(必须要将时间戳转换为Int类型，不然会变成NaN)
+                                let timeshijianchuo = parseInt(d["LastTime"].match(/[0-9]/ig).join(''));
+                                // 将时间戳作为Date()构造器的参数，可以得到对应时间戳的日期对象
+                                var date = dateFormat(new Date(timeshijianchuo))
+                                return '<div>' + date + '</div>'
+                            }
+                        }
+                    ]],
+                    limit: 5,   // 每页几条记录
+                    limits: [5, 10, 15, 20],    // 可供选择的记录条数
+                });
+            })
+        })
+
+    </script>
+</body>
+
+</html>

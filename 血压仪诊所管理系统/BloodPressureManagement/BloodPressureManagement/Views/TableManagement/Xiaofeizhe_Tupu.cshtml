@@ -1,0 +1,402 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sinocare</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+    <script src="~/js/echarts.min.js"></script>
+    <script src="~/js/dark.js"></script>
+    <script src="~/js/infographic.js"></script>
+</head>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<body class="layui-anim layui-anim-up">
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">报表管理</a>
+            <a>
+                <cite>消费者数据图谱</cite>
+            </a>
+        </span>
+        <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon" style="line-height:38px">ဂ</i>
+        </a>
+    </div>
+    <div class="x-body">
+
+        <div class="layui-row layui-bg-gray">
+            <br />
+            <form class="layui-form layui-col-md12 x-so" style="width: 800px;">
+
+
+                <div class="layui-inline" style="text-align: center;">
+                    <label for="L_pass" class="layui-form-label">所属总店</label>
+                    <div class="layui-input-inline">
+                        <select name="province" lay-filter="province">
+                            <option value="">北京同仁堂总店</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	所属分店 </label>
+                    <div class="layui-input-inline">
+                        <select name="province" lay-filter="province">
+                            <option value="">同仁堂分店1</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">筛选周期 </label>
+                    <div class="layui-input-inline">
+                        <select name="province" lay-filter="province">
+                            <option value="">近半年</option>
+                        </select>
+                    </div>
+                </div>
+                <br /><br />
+
+
+
+
+            </form>
+            <div class="layui-inline" style="margin-left: 1020px; margin-top: -140px; ">
+                <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i>查询</button>
+                <button class="layui-btn"><i class="layui-icon"></i>导出报表</button>
+            </div>
+        </div>
+
+        <!--
+            简洁选项卡
+        -->
+        <br />
+        <div class="layui-bg-gray" align="center" style="background-color: #fff;height: 60px;"><br /><font style="font-size: 16px;">消费者数据图谱（19-05-28至19-11-27）</font></div>
+        <div class="layui-card-body">
+            <div class="layui-tab layui-tab-brief" lay-filter="component-tabs-brief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">检测时段人次分布</li>
+                    <li>检测频次排行</li>
+                    <li>结果分析图</li>
+
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div align="center">
+                            <table cellpadding="15" cellspacing="15" style="width: 800px; height: 90px;">
+                                <tr align="center"><td>平均年龄(岁)</td><td>异常人次</td><td>异常比例</td></tr>
+                                <tr align="center"><td>36</td><td>439</td><td>81.30%</td></tr>
+                                <tr align="center"><td colspan="3">按时段检测人次分布图</td></tr>
+                            </table>
+                        </div>
+                        <br />
+                        <!--
+                        检测时段人次分布 柱形图
+                        -->
+                        <div id="myChart" style="width: 800px; height: 300px; margin-left: 240px;"></div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <!--
+                            检测频次排行表格
+                        -->
+                        <table class="layui-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>姓名</th>
+                                    <th>性别</th>
+                                    <th>身份证号码</th>
+                                    <th>联系方式</th>
+                                    <th>检测次数</th>
+                                    <th>指标异常率</th>
+                                    <th>所属总店</th>
+                                    <th>所属分店</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>1</td>
+                                    <td>叶黎</td>
+                                    <td>女</td>
+                                    <td>433023200112122134</td>
+                                    <td>18235339194</td>
+                                    <td>47</td>
+                                    <td>61.70</td>
+                                    <td>千金大药房</td>
+                                    <td>天心区分店</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>2</td>
+                                    <td>拉萨</td>
+                                    <td>女</td>
+                                    <td>433023200112122134</td>
+                                    <td>18235339194</td>
+                                    <td>47</td>
+                                    <td>61.70</td>
+                                    <td>千金大药房</td>
+                                    <td>梅溪湖分店</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>3</td>
+                                    <td>李四</td>
+                                    <td>女</td>
+                                    <td>431023199212032134</td>
+                                    <td>15525125194</td>
+                                    <td>47</td>
+                                    <td>32.70</td>
+                                    <td>北京同仁堂总店</td>
+                                    <td>枫林三路分店</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>4</td>
+                                    <td>林璐</td>
+                                    <td>女</td>
+                                    <td>433023201112032134</td>
+                                    <td>13225139124</td>
+                                    <td>42</td>
+                                    <td>64.70</td>
+                                    <td>老百姓大药房</td>
+                                    <td>岳麓区分店</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>5</td>
+                                    <td>李媛</td>
+                                    <td>女</td>
+                                    <td>431023200112032134</td>
+                                    <td>13825139194</td>
+                                    <td>64</td>
+                                    <td>35.70</td>
+                                    <td>老百姓大药房</td>
+                                    <td>岳麓大道分店</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>6</td>
+                                    <td>王贤</td>
+                                    <td>男</td>
+                                    <td>433023199909032134</td>
+                                    <td>15525139422</td>
+                                    <td>64</td>
+                                    <td>66.70</td>
+                                    <td>千金大药房</td>
+                                    <td>岳麓区分店</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>7</td>
+                                    <td>吴邪</td>
+                                    <td>男</td>
+                                    <td>433023200112032134</td>
+                                    <td>18925139194</td>
+                                    <td>47</td>
+                                    <td>61.70</td>
+                                    <td>千金大药房</td>
+                                    <td>开福区分店</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>8</td>
+                                    <td>欧文域</td>
+                                    <td>男</td>
+                                    <td>433023200505032134</td>
+                                    <td>15625139194</td>
+                                    <td>77</td>
+                                    <td>74.70</td>
+                                    <td>北京同仁堂</td>
+                                    <td>雨花区分店</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div align="center"><font style="font-size: 16px;">空腹血糖</font></div>
+                        <!--
+                            结果分析图
+                        -->
+                        <div id="fenxi" style="width: 800px; height: 300px; margin-left: 240px;"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#start' //指定元素
+				});
+
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#end' //指定元素
+				});
+			});
+
+			/*用户-停用*/
+			function member_stop(obj, id) {
+				layer.confirm('确认要停用吗？', function(index) {
+
+					if($(obj).attr('title') == '启用') {
+
+						//发异步把用户状态进行更改
+						$(obj).attr('title', '停用')
+						$(obj).find('i').html('&#xe62f;');
+
+						$(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+						layer.msg('已停用!', {
+							icon: 5,
+							time: 1000
+						});
+
+					} else {
+						$(obj).attr('title', '启用')
+						$(obj).find('i').html('&#xe601;');
+
+						$(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+						layer.msg('已启用!', {
+							icon: 5,
+							time: 1000
+						});
+					}
+
+				});
+			}
+
+			/*用户-删除*/
+			function member_del(obj, id) {
+				layer.confirm('确认要删除吗？', function(index) {
+					//发异步删除数据
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!', {
+						icon: 1,
+						time: 1000
+					});
+				});
+			}
+
+			function delAll(argument) {
+
+				var data = tableCheck.getData();
+
+				layer.confirm('确认要删除吗？' + data, function(index) {
+					//捉到所有被选中的，发异步进行删除
+					layer.msg('删除成功', {
+						icon: 1
+					});
+					$(".layui-form-checked").not('.header').parents('tr').remove();
+				});
+			}
+    </script>
+</body>
+
+</html>
+<script type="text/javascript">
+
+		// 基于准备好的dom，指定样式infographic,初始化echarts实例
+		var myChart = echarts.init(document.getElementById('myChart'),
+				'infographic');
+
+option = {
+    color: ['#3398DB'],
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            axisTick: {
+                alignWithLabel: true
+            }
+        }
+    ],
+    yAxis : [
+        {
+        	max:300,
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'直接访问',
+            type:'bar',
+            barWidth: '60%',
+            data:[10, 52, 200, 334, 390, 330, 220]
+        }
+    ]
+};
+
+
+	//<!--使用指定的配置项和数据显示图表-->
+		myChart.setOption(option);
+</script>
+<script type="text/javascript">
+		var fenxi= echarts.init(document.getElementById('fenxi'),
+				'infographic');
+				option = {
+    xAxis: {
+        type: 'category',
+          boundaryGap: false,
+        data: ['6','7', '8', '9', '10', '11']
+    },
+    yAxis: {
+        type: 'value',
+        max:23
+    },
+    series: [{
+        data: [6,7, 6, 13, 9, 8],
+        type: 'line',
+          smooth: true
+    }]
+};
+
+				//<!--使用指定的配置项和数据显示图表-->
+		fenxi.setOption(option);
+</script>

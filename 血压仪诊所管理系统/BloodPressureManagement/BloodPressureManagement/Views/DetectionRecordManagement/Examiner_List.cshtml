@@ -1,0 +1,307 @@
+﻿@model List<BloodPressureManagement.Models.UserInfo>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>检测者列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">sinoare</a>
+            <a href="">检测记录管理</a>
+            <a>
+                <cite>检测者列表</cite>
+            </a>
+        </span>
+        <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="/DetectionRecordManagement/Examiner_List" title="刷新">
+            <i class="layui-icon" style="line-height:38px">ဂ</i>
+        </a>
+    </div>
+    <div class="x-body">
+        <div class="layui-row layui-bg-gray">
+            <br />
+            <form class="layui-form layui-col-md12 x-so" style="width: 100%;" action="/DetectionRecordManagement/FindCustomerByNamePhone" method="post">
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	姓名</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" placeholder="请输入姓名" name="Cname">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	联系电话</label>
+                    <div class="layui-input-inline">
+
+                        <input class="layui-input" placeholder="请输入联系电话" name="Cphone">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	所属分店</label>
+                    <div class="layui-input-inline">
+
+                        <select name="Branch" lay-filter="province" id="branch">
+                            @foreach (var item in ViewBag.BranchList as List<BloodPressureManagement.Models.Branch>)
+                            {
+                                <option value="@item.Bid">@item.Bnane</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+                <a href="javascript:;" class="layui-btn" style="float:right;margin-right:30px" onclick="cleanInputInfo()"><i class="layui-icon"></i>重置</a>
+                @*<button class="layui-btn" lay-submit="" lay-filter="sreach" type="submit" style="float:right;margin-right:20px"><i class="layui-icon">&#xe615;</i>查询</button>*@
+                <a class="layui-btn" lay-submit="" lay-filter="sreach" style="float:right;margin-right:20px" onclick="findExaminer()"><i class="layui-icon">&#xe615;</i>查询</a>
+            </form>
+            <br />
+        </div>
+
+        @* layui自带的加载数据表格 *@
+        <table class="layui-table" id="idTest" lay-filter="demo">
+        </table>
+
+        @* 查看、修改、删除工具条 *@
+    <script type="text/html" id="barDemo" style="width:100px">
+        <a class="layui-btn layui-btn-xs" lay-event="detail" href="javascript:;">详情</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit" href="javascript:;">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="reset">重置</a>
+    </script>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <a class="layui-btn layui-btn-sm" lay-event="getCheckData" onclick="delAll()"><i class="layui-icon">&#xe640;</i>删除选中行</a>
+            </div>
+        </script>
+    </div>
+
+    <script>
+        // 清除用户输入的信息
+        function cleanInputInfo() {
+            // 清除姓名
+            $("input[name=Cname]").val("");
+            // 清除电话
+            $("input[name=Cphone]").val("");
+        }
+
+        // 指定姓名、电话、分店查找指定用户
+        function findExaminer() {
+            // 获取姓名、电话、分店id
+            var name = $("input[name=Cname]").val();
+            var phone = $("input[name=Cphone]").val();
+            var branch = $("#branch").val();
+
+            layui.use('table', function () {
+                var table = layui.table;
+                // 表格重载
+                table.reload('idTest', {
+                    url: '/DetectionRecordManagement/Examiner_Find'
+                    , where: {
+                        "cname": name,
+                        "cphone": phone,
+                        "bid": branch
+                    }
+                });
+            })
+        }
+
+        // 分页
+        layui.use('util', function () {
+
+            // 格式化指定时间的函数
+            // data：时间对象
+            function dateFormat(date) {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth();
+                let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+                // 返回yyyy-MM-dd格式的日期字符串
+                return year + "-" + month + "-" + day;
+            }
+
+            layui.use('table', function () {
+                var table = layui.table;
+                // 第一个实例
+                table.render({
+                    elem: '#idTest' // 挂载的元素
+                    , toolbar:true
+                    , height: 312
+                    , totalrow:true
+                    , url: '/DetectionRecordManagement/Examiner_Paging' //数据接口
+                    , toolbar: "#toolbarDemo"
+                    , page: true //开启分页
+                    , cols: [[ //表头
+                        { checkbox: true, width: 60, fixed: true },
+                        { field: 'Uid', title: '检测者编号' },
+                        { field: 'Uname', title: '检测者名称' },
+                        { field: 'Usex', title: '性别' },
+                        {
+                            field: 'Uage', title: '年龄', sort: true, templet: function (d) {
+                                return "<div>" + d.Uage + "岁" + "</div>"
+                            }
+                        },
+                        { field: 'Phone', title: '电话' },
+                        { field: 'Bnane', title: '分店', templet: "#banchname" },
+                        { field: 'Number', title: '检测次数', sort: true },
+                        {
+                            field: 'LastTime', title: '最后检测时间', sort: true, templet: function (d) {
+                                // 后台传递过来的时间数据为/Date[时间戳]/，使用正则获取其中的时间戳(match匹配的数据是数组)
+                                // 并将它们合并成一个时间戳字符串然后转换为Int类型(必须要将时间戳转换为Int类型，不然会变成NaN)
+                                let timeshijianchuo = parseInt(d["LastTime"].match(/[0-9]/ig).join(''));
+                                // 将时间戳作为Date()构造器的参数，可以得到对应时间戳的日期对象
+                                var date = dateFormat(new Date(timeshijianchuo))
+                                return '<div>' + date + '</div>'
+                            }
+                        },
+                        { fixed: 'right', width: 290, align: 'center', toolbar: '#barDemo' } //这里的toolbar值是模板元素的选择器
+                    ]],
+                    limit: 5,   // 每页几条记录
+                    limits: [5, 10, 15, 20],    // 可供选择的记录条数
+                });
+
+                // 查看、修改、删除工具条事件
+                table.on('tool(demo)', function (obj) { //注：tool 是工具条事件名，demo 是 table 原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data; //获得当前行数据
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    let Uid = data.Uid;
+                    
+
+                    if (layEvent === 'detail') { //查看详情
+                        x_admin_show('详情', 'Admin_Detail?id=' + Uid + '')    // 打开查看页面
+                    }
+                    else if (layEvent === 'del') { //删除
+                        layer.confirm('是否删除' + data.Uname + '', function (index) {
+                            // 发送ajax请求
+                            //向服务端发送异步删除指令
+                            $.ajax({
+                                url: '/DetectionRecordManagement/Admin_Del',
+                                type: "get",
+                                data: {
+                                    "id": Uid
+                                },
+                                success: function (data) {
+                                    if (data == "") {
+                                        layer.msg('出现错误!', { icon: 2, time: 1000 });
+                                        return;
+                                    }
+                                    // 返回ok表示删除成功
+                                    if (data == "ok") {
+                                        layer.msg('已删除!', { icon: 1, time: 1000 });
+                                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                                        layer.close(index);
+                                    } else {
+                                        layer.msg('删除失败!', { icon: 2, time: 1000 });
+                                    }
+                                }
+                            })
+                        });
+                    } else if (layEvent === 'edit') { //编辑
+                        //do something
+                        x_admin_show('编辑', 'Admin_Edit?id=' + Uid + '')
+                        //同步更新缓存对应的值
+                        //obj.update({
+                        //    username: '123'
+                        //    , title: 'xxx'
+                        //});
+                    }
+                    else if (layEvent == 'reset') {
+                        if (confirm('确定要重置' + data.Uname + '的密码吗？', { icon: 3, title: '提示' })) {
+                            $.ajax({
+                                type: 'post',
+                                url: '/DetectionRecordManagement/Account_Password',
+                                data: { 'id': data.Uid },
+                                success: function (result) {
+                                    if (result == "OK") {
+                                        layer.open({
+                                            title: '提示',
+                                            content: '重置密码成功！',
+                                            icon: 1
+                                        })
+                                    } else {
+                                        layer.open({
+                                            title: '提示',
+                                            content: '重置密码失败！',
+                                            icon: 2
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                });
+            })
+
+        })
+
+        function delAll() {
+            var table = layui.table;
+            var checkStatus = table.checkStatus("idTest");  // idTest为表格的id
+            let chedata = checkStatus.data;     // 获取选中的单选框每行的数据
+            let custId_arr = [];
+
+            // 将所有选择的要删除用户id保存到一个数组中，长度为0的话表示没有选择
+            if (chedata.length > 0) {
+                for (var i = 0; i < chedata.length; i++) {
+                    custId_arr.push(chedata[i].Uid)
+                }
+            } else {
+                layer.msg("请选择要删除的检测者");
+                return;
+            }
+
+            layer.confirm('是否删除选中的检测者？', { icon: 3, title: '提示' }, function (index) {
+                //do something
+                //发送ajax请求给后台，删除所有选中的检测者
+                $.ajax({
+                    type: "get",
+                    url: "/DetectionRecordManagement/Batch_Examiner_Del",
+                    data: {
+                        "custId_arr": custId_arr.toString()
+                    },
+                    success: function (data) {
+                        if (data === undefined) {
+                            layer.alert('出错了', { icon: 5 });
+                            return;
+                        }
+                        if (data == "ok") {
+                            layer.open({
+                                content: '删除成功',
+                                icon: 1,
+                                end: function () {
+                                    table.reload("idTest");
+                                }
+                            });
+                        } else {
+                            layer.alert('删除失败', { icon: 5 });
+                        }
+                    }
+                })
+                layer.close(index);
+            });
+        }
+    </script>
+</body>
+
+</html>

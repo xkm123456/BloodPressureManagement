@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BloodPressureManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Account_number">
+    <Key>
+      <PropertyRef Name="Aid" />
+    </Key>
+    <Property Name="Aid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Account_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Phone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Bid" Type="Int32" />
+    <Property Name="Account_State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Branch" Relationship="Self.FK__Account_num__Bid__4222D4EF" FromRole="Account_number" ToRole="Branch" />
+  </EntityType>
+  <EntityType Name="Branch">
+    <Key>
+      <PropertyRef Name="Bid" />
+    </Key>
+    <Property Name="Bid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Hid" Type="Int32" />
+    <Property Name="Bnane" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Province" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="County" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="DetailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Account_number" Relationship="Self.FK__Account_num__Bid__4222D4EF" FromRole="Branch" ToRole="Account_number" />
+    <NavigationProperty Name="Head_office" Relationship="Self.FK__Branch__Hid__398D8EEE" FromRole="Branch" ToRole="Head_office" />
+    <NavigationProperty Name="UserInfo" Relationship="Self.FK__UserInfo__Bid__0880433F" FromRole="Branch" ToRole="UserInfo" />
+    <NavigationProperty Name="AdminInfo" Relationship="BloodPressureManagementModel.FK__AdminInfo__Bid__1B9317B3" FromRole="Branch" ToRole="AdminInfo" />
+  </EntityType>
+  <EntityType Name="Head_office">
+    <Key>
+      <PropertyRef Name="Hid" />
+    </Key>
+    <Property Name="Hid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Hname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Contact" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Phone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Branch" Relationship="Self.FK__Branch__Hid__398D8EEE" FromRole="Head_office" ToRole="Branch" />
+  </EntityType>
+  <EntityType Name="Menu">
+    <Key>
+      <PropertyRef Name="Mid" />
+    </Key>
+    <Property Name="Mid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MenuUrl" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="MenuType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="SuperIor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Projects">
+    <Key>
+      <PropertyRef Name="Did" />
+    </Key>
+    <Property Name="Did" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Uid" Type="Int32" />
+    <Property Name="Dname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Util" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ShouSuoYa" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ShuZhangYa" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Decipher" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="UserInfo" Relationship="Self.FK__Projects__Uid__11158940" FromRole="Projects" ToRole="UserInfo" />
+    <Property Name="Pro_Time" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="SysRole">
+    <Key>
+      <PropertyRef Name="Rid" />
+    </Key>
+    <Property Name="Rid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Rname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Describle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserInfo">
+    <Key>
+      <PropertyRef Name="Uid" />
+    </Key>
+    <Property Name="Uid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Uacount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Upwd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Uname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Usex" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="Uage" Type="Int32" Nullable="false" />
+    <Property Name="Phone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IdentificationCard" Type="String" MaxLength="18" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Bid" Type="Int32" />
+    <Property Name="Number" Type="Int32" />
+    <Property Name="LastTime" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="Branch" Relationship="Self.FK__UserInfo__Bid__0880433F" FromRole="UserInfo" ToRole="Branch" />
+    <NavigationProperty Name="Projects" Relationship="Self.FK__Projects__Uid__11158940" FromRole="UserInfo" ToRole="Projects" />
+  </EntityType>
+  <Association Name="FK__Account_num__Bid__4222D4EF">
+    <End Role="Branch" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="Account_number" Type="Self.Account_number" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="Bid" />
+      </Principal>
+      <Dependent Role="Account_number">
+        <PropertyRef Name="Bid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Branch__Hid__398D8EEE">
+    <End Role="Head_office" Type="Self.Head_office" Multiplicity="0..1" />
+    <End Role="Branch" Type="Self.Branch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Head_office">
+        <PropertyRef Name="Hid" />
+      </Principal>
+      <Dependent Role="Branch">
+        <PropertyRef Name="Hid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserInfo__Bid__0880433F">
+    <End Role="Branch" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="Bid" />
+      </Principal>
+      <Dependent Role="UserInfo">
+        <PropertyRef Name="Bid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Projects__Uid__11158940">
+    <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+    <End Role="Projects" Type="Self.Projects" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserInfo">
+        <PropertyRef Name="Uid" />
+      </Principal>
+      <Dependent Role="Projects">
+        <PropertyRef Name="Uid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BloodPressureManagementEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Account_number" EntityType="Self.Account_number" />
+    <EntitySet Name="Branch" EntityType="Self.Branch" />
+    <EntitySet Name="Head_office" EntityType="Self.Head_office" />
+    <EntitySet Name="Menu" EntityType="Self.Menu" />
+    <EntitySet Name="Projects" EntityType="Self.Projects" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="SysRole" EntityType="Self.SysRole" />
+    <EntitySet Name="UserInfo" EntityType="Self.UserInfo" />
+    <AssociationSet Name="FK__Account_num__Bid__4222D4EF" Association="Self.FK__Account_num__Bid__4222D4EF">
+      <End Role="Branch" EntitySet="Branch" />
+      <End Role="Account_number" EntitySet="Account_number" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Branch__Hid__398D8EEE" Association="Self.FK__Branch__Hid__398D8EEE">
+      <End Role="Head_office" EntitySet="Head_office" />
+      <End Role="Branch" EntitySet="Branch" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserInfo__Bid__0880433F" Association="Self.FK__UserInfo__Bid__0880433F">
+      <End Role="Branch" EntitySet="Branch" />
+      <End Role="UserInfo" EntitySet="UserInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Projects__Uid__11158940" Association="Self.FK__Projects__Uid__11158940">
+      <End Role="UserInfo" EntitySet="UserInfo" />
+      <End Role="Projects" EntitySet="Projects" />
+    </AssociationSet>
+    <EntitySet Name="AdminInfo" EntityType="BloodPressureManagementModel.AdminInfo" />
+    <AssociationSet Name="FK__AdminInfo__Bid__1B9317B3" Association="BloodPressureManagementModel.FK__AdminInfo__Bid__1B9317B3">
+      <End Role="Branch" EntitySet="Branch" />
+      <End Role="AdminInfo" EntitySet="AdminInfo" />
+    </AssociationSet>
+    <EntitySet Name="SuperAdmin" EntityType="BloodPressureManagementModel.SuperAdmin" />
+  </EntityContainer>
+  <EntityType Name="AdminInfo">
+    <Key>
+      <PropertyRef Name="Aid" />
+    </Key>
+    <Property Name="Aid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Aacount" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Apwd" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Aname" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="AOr" Type="Boolean" Nullable="false" />
+    <Property Name="Phone" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+    <Property Name="Bid" Type="Int32" />
+    <Property Name="Account_State" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Branch" Relationship="BloodPressureManagementModel.FK__AdminInfo__Bid__1B9317B3" FromRole="AdminInfo" ToRole="Branch" />
+  </EntityType>
+  <Association Name="FK__AdminInfo__Bid__1B9317B3">
+    <End Type="BloodPressureManagementModel.Branch" Role="Branch" Multiplicity="0..1" />
+    <End Type="BloodPressureManagementModel.AdminInfo" Role="AdminInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="Bid" />
+      </Principal>
+      <Dependent Role="AdminInfo">
+        <PropertyRef Name="Bid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="SuperAdmin">
+    <Key>
+      <PropertyRef Name="Aid" />
+    </Key>
+    <Property Name="Aid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Aacount" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Apwd" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

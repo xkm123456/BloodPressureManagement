@@ -1,0 +1,161 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Store_List</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+</head>
+
+<body class="layui-anim layui-anim-up">
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">连锁药房管理</a>
+            <a>
+                <cite>总店列表</cite>
+            </a>
+        </span>
+        <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon" style="line-height:38px">ဂ</i>
+        </a>
+    </div>
+    <div class="x-body">
+        <div class="layui-row layui-bg-gray">
+            <br />
+            <form class="layui-form layui-col-md12 x-so" style="width: 550px;">
+                <div>
+                    <div class="layui-inline">
+                        <label for="L_pass" class="layui-form-label">	总店名</label>
+                        <div class="layui-input-inline">
+                            <input id="sel_name" class="layui-input" placeholder="总店名">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label for="L_pass" class="layui-form-label">	 总店编号 </label>
+                        <div class="layui-input-inline">
+                            <input type="number" id="sel_id" class="layui-input" placeholder="总店编号">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div style="margin-left:10px;">
+                <button class="layui-btn" onclick="Search()"><i class="layui-icon">&#xe615;</i>查询</button>
+                <button class="layui-btn" onclick="x_admin_show('新增总店信息','Store_Add',700,400)"><i class="layui-icon"></i>新增总店</button>
+            </div>
+        </div>
+        @*表格内容*@
+        <table id="table_list" lay-filter="table_list">
+        </table>
+        @*右侧操作栏*@
+        <script type="text/html" id="Operation">
+            <a title="编辑" href="#" lay-event="edit">
+                <i class="layui-icon">&#xe63c;</i>
+            </a>
+            <a title="删除" href="#" lay-event="del">
+                <i class="layui-icon">&#xe640;</i>
+            </a>
+        </script>
+    </div>
+    <script>
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+        });
+
+        //表格渲染,表格内容
+        layui.use('table', function () {
+            var table = layui.table;
+            //第一个实例
+            table.render({
+                id: 'table_list',
+                elem: '#table_list',
+                height: 312,
+                url: '/ChainPharmacyManagement/Head_list',
+                page: true,//开启分页
+                cols: [[//表头
+                    { field: 'Hid', title: '总店编号', sort: true, fixed: 'left' },
+                    { field: 'Hname', title: '总店名称' },
+                    { field: 'Contact', title: '联系人' },
+                    { field: 'Phone', title: '电话' },
+                    { field: 'title', title: '操作', width: 130, templet: '#Operation' }
+                ]],
+                error: '数据获取失败，请刷新或联系管理员',
+                loading: true,
+                limit: 5,
+                limits: [5, 10, 15, 20]
+            });
+            //表格右侧操作栏
+            table.on('tool(table_list)', function (obj) {
+                var data = obj.data;
+                var layEvent = obj.event;
+                var tr = obj.tr;
+                //如果是编辑
+                if (layEvent == 'edit') {
+                    x_admin_show('编辑总店信息', 'Store_Edit?Hid=' + data.Hid, 700, 400);
+                }
+                //如果是删除
+                else if (layEvent == 'del') {
+                    layer.confirm('确定要删除' + data.Hname + '吗？', { icon: 3, title: '提示' }, function (index) {
+                        $.ajax({
+                            type: "post",
+                            url: "/ChainPharmacyManagement/Store_Del",
+                            data: { "Hid": data.Hid },
+                            success: function (result) {
+                                if (result == "OK") {
+                                    obj.del(tr);
+                                    layer.close(index);
+                                }
+                                else {
+                                    layer.open({
+                                        title: '提示',
+                                        content: '删除失败，可能还有分店绑定！',
+                                        icon: 2
+                                    })
+                                }
+                            }
+                        })
+                    })
+
+                }
+            })
+        });
+        //查询
+        function Search() {
+            var sel_name = $("#sel_name").val();
+            var sel_id = $("#sel_id").val();
+            layui.use('table', function () {
+                var table = layui.table;
+                //表格重载
+                table.reload('table_list', {
+                    url: '/ChainPharmacyManagement/Search'
+                    , where: {
+                        "Hid": sel_id,
+                        "Hname": sel_name
+                    }
+                });
+            })
+            return false;
+        }
+    </script>
+</body>
+</html>

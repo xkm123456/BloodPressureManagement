@@ -1,0 +1,179 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sinocares</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+    <script src="~/js/vue.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="layui-anim layui-anim-up">
+    <h1 id="cid" style="display:none;">@ViewBag.user.Uid</h1>
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a>
+                <cite>检测项目</cite>
+            </a>
+        </span>
+    </div>
+    <div class="x-body" id="app">
+        <div class="layui-row layui-bg-gray">
+            <br />
+
+            <form class="layui-form layui-col-md12 x-so" style="width: 1280px;">
+                <div class="layui-inline" style="width:100px;">
+                    <label for="L_pass" class="layui-form-label" style="font-size: 14px;width:100px"><span id="name">@ViewBag.user.Uname</span>/<span id="sex">@ViewBag.user.Usex</span>/<span id="age">@ViewBag.user.Uage</span> 岁</label>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">检查时间</label>
+                    <div class="layui-input-block">
+                        <input class="layui-input" required name="Pro_Time"  type="text" placeholder="请输入" id="input_time" value="@ViewBag.JcTime">
+                    </div>
+                </div>
+                <div class="layui-inline" style="margin-left: 15px;">
+                    <label for="L_pass" class="layui-form-label">	身高</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" type="number" placeholder="请输入" id="height" @@input="checkInfo('height',$event)" :value="height">cm
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">体重 </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" type="number" placeholder="请输入" id="weight" min="60" max="200">kg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测量血压仪器&nbsp;&nbsp;
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <select name="province" lay-filter="province" id="method">
+                        <option value="血压计">血压计</option>
+                        <option value="电子血压计">电子血压计</option>
+                    </select>
+                </div>
+            </form>
+            <div style="margin-left: 1200px;">
+
+                <button class="layui-btn" lay-submit="" lay-filter="sreach"><a href="/DetectionRecordManagement/Examiner_Add">上一步</a></button>
+                <button class="layui-btn" lay-submit="" lay-filter="sreach"><a href="#" id="Link_ProduceForm">生成报告单</a></button>
+
+            </div>
+        </div>
+
+        <br />
+
+        <div class="layui-form-item">
+            <label for="L_pass" class="layui-form-label">
+                收缩压:
+            </label>
+            <div class="layui-input-inline">
+                <input type="number" autocomplete="off" placeholder="请输入" class="layui-input" id="shousuoya">
+            </div>
+            <div class="layui-input-inline" style="width: 109px;">
+                <select name="province" lay-filter="province" style="height:38px;">
+                    <option value="">mmHg</option>
+                </select>
+            </div>
+            <label for="L_pass" class="layui-form-label">
+                舒张压:
+            </label>
+            <div class="layui-input-inline">
+                <input type="number" autocomplete="off" placeholder="请输入" class="layui-input" id="shuzhangya">
+            </div>
+            <div class="layui-input-inline" style="width: 109px;">
+                <select name="province" lay-filter="province" style="height:38px;">
+                    <option value="">mmHg</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#Link_ProduceForm").click(function () {
+            let cid = $("#cid").html();                     // 检测者id
+            let shousuoya = $("#shousuoya").val();          // 收缩压
+            let shuzhangya = $("#shuzhangya").val();        // 舒张压
+            let method = $("#method").val();                // 检测方法
+            let pro_Time = $("input[name=Pro_Time]").val();                // 检测方法
+
+            $.ajax({
+                url: '/DetectionRecordManagement/Jiancebaogaodan',
+                type:"Post",
+                data: {
+                    "cid": cid,
+                    "shousuoya": shousuoya,
+                    "shuzhangya": shuzhangya,
+                    "method": method,
+                    "pro_Time": pro_Time
+                },
+                success: function (data) {
+                    if (data == undefined) {
+                        alert("出错误了请联系管理员");
+                        return;
+                    }
+                    if (data == "ok") {
+                        // 获取姓名
+                        let name = $("#name").html();
+                        let gender = $("#sex").html();
+                        let age = $("#age").html();
+                        let height = $("#height").val();
+                        let weight = $("#weight").val();
+
+                        window.location.href = `/DetectionRecordManagement/Jiancebaogaodan?cid=${cid}&name=${name}&gender=${gender}&age=${age}&height=${height}&weight=${weight}`;
+                    } else {
+                        layer.msg("生成报告单失败!")
+                        return;
+                    }
+                }
+            })
+        })
+
+        // 体重
+        // 收缩压
+        // 舒张压
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#input_time' //指定元素
+            });
+        });
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>

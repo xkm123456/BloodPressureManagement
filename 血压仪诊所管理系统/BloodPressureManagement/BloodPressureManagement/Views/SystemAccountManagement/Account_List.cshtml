@@ -1,0 +1,334 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sinocare</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="layui-anim layui-anim-up">
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">系统账号管理</a>
+            <a>
+                <cite>系统账号列表</cite>
+            </a>
+        </span>
+        <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon" style="line-height:38px">ဂ</i>
+        </a>
+    </div>
+    <div class="x-body">
+
+        <div class="layui-row layui-bg-gray">
+            <br />
+            <form class="layui-form layui-col-md12 x-so" style="width: 600px;">
+
+
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	联系电话</label>
+                    <div class="layui-input-inline">
+                        <input id="phone" name="phone" class="layui-input" placeholder="请输入电话号码">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	 姓名 </label>
+                    <div class="layui-input-inline">
+                        <input id="name" name="name" class="layui-input" placeholder="请输入姓名">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label for="L_pass" class="layui-form-label">	 状态</label>
+                    <div class="layui-input-inline">
+                        <select id="Account_State" name="Account_State" lay-filter="province">
+                            <option value="">请选择</option>
+                            <option value="0">冻结</option>
+                            <option value="1">启用</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="x-city" class="layui-inline">
+                    <div class="layui-inline">
+                        <label for="L_pass" class="layui-form-label">所在地区 </label>
+                        <div class="layui-input-inline">
+                            <input id="address" name="address" lay-filter="address" class="layui-input" placeholder="请输入地区" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+            <div style="margin-left: 450px; margin-top: 36px; ">
+                <button class="layui-btn" onclick="Search()"><i class="layui-icon">&#xe615;</i>查询</button>
+                @*<button class="layui-btn"><i class="layui-icon"></i>重置</button>*@
+                <button class="layui-btn" onclick="x_admin_show('添加分店管理员','Account_Add',600,400)"><i class="layui-icon"></i>添加分店管理员</button>
+                <button id="add_Head" class="layui-btn" onclick="x_admin_show('添加总店管理员','Account_Add_Head',600,400)"><i class="layui-icon"></i>添加总店管理员</button>
+            </div>
+        </div>
+        @*表格内容*@
+        <table id="table_list" lay-filter="table_list"></table>
+        @*右侧操作栏*@
+        <script type="text/html" id="Operation">
+            <a title="编辑" href="#" lay-event="edit">
+                <i class="layui-icon">&#xe63c;</i>
+            </a>
+            <a title="重置" href="#" lay-event="reset">
+                <i class="layui-icon">&#xe631;</i>
+            </a>
+            <a title="删除" href="#" lay-event="del">
+                <i class="layui-icon">&#xe640;</i>
+            </a>
+            {{# if(d.Account_State==true){ }}
+            <a title="冻结" href="#" lay-event="status">
+                <i class="layui-icon">&#xe601;</i>
+            </a>
+            {{# } else{ }}
+            <a title="启用" href="#" lay-event="status">
+                <i class="layui-icon">&#xe62f;</i>
+            </a>
+            {{#  } }}
+        </script>
+    </div>
+    <script>
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+        });
+
+        //表格渲染,表格内容
+        layui.use('table', function () {
+            var table = layui.table;
+            layer.load(3);
+            //第一个实例
+            table.render({
+                id: 'table_list',
+                elem: '#table_list',
+                method: 'get',
+                height: 312,
+                url: '/SystemAccountManagement/Show_list',
+                page: true,//开启分页
+                cols: [[//表头
+                    { field: 'Aid', title: '编号', sort: true, fixed: 'left' },
+                    { field: 'Bnane', title: '店名称' },
+                    { field: 'Aacount', title: '账号' },
+                    { field: 'Aname', title: '姓名' },
+                    { field: 'Phone', title: '联系电话' },
+                    { field: 'DetailAddress', title: '分店地址' },
+                    { field: 'title', title: '角色', templet: Role },
+                    { field: 'title', title: '状态', templet: Status },
+                    { field: 'type', title: '操作', width: 130, templet: '#Operation' }
+                ]],
+                error: '数据获取失败，请刷新或联系管理员',
+                loading: true,
+                limit: 5,
+                limits: [5, 10, 15, 20]
+            });
+            layer.closeAll("loading");
+            //表格右侧操作栏
+            table.on('tool(table_list)', function (obj) {
+                var data = obj.data;
+                var layEvent = obj.event;
+                var tr = obj.tr;
+                //如果是编辑
+                if (layEvent == 'edit') {
+                    x_admin_show('编辑', 'Account_Edit?id=' + data.Aid, 600, 430);
+                }
+                //如果是重置
+                else if (layEvent == 'reset') {
+                    if (confirm('确定要重置' + data.Aname + '的密码吗？', { icon: 3, title: '提示' })) {
+                        $.ajax({
+                            type: 'post',
+                            url: '/SystemAccountManagement/Account_Password',
+                            data: { 'id': data.Aid },
+                            success: function (result) {
+                                if (result == "OK") {
+                                    layer.open({
+                                        title: '提示',
+                                        content: '重置密码成功！',
+                                        icon: 1
+                                    })
+                                } else {
+                                    layer.open({
+                                        title: '提示',
+                                        content: '重置密码失败！',
+                                        icon: 2
+                                    })
+                                }
+                            }
+                        })
+                    }
+                }
+                //如果是删除
+                else if (layEvent == 'del') {
+                    layer.confirm('确定要删除' + data.Aname + '吗？', { icon: 3, title: '提示' }, function (index) {
+                        $.ajax({
+                            type: "post",
+                            url: "/SystemAccountManagement/Account_Del",
+                            data: { "Aid": data.Aid },
+                            success: function (result) {
+                                if (result == "OK") {
+                                    obj.del(tr);
+                                    layer.close(index);
+                                }
+                                else {
+                                    layer.open({
+                                        title: '提示',
+                                        content: '删除失败，请重新操作！',
+                                        icon: 2
+                                    })
+                                }
+                            }
+                        })
+                    })
+
+                }
+                //如果是冻结
+                else if (layEvent == 'status') {
+                    if ($(this).attr('title') == "冻结") {
+                        if (confirm('确认要冻结' + data.Aname + '吗？', { icon: 3, title: '提示' })) {
+                            $.ajax({
+                                type: "post",
+                                url: "/SystemAccountManagement/Account_Frozen",
+                                data: { "Aid": data.Aid },
+                                success: function (result) {
+                                    if (result == "OK") {
+                                        $(this).attr('title', '启用')
+                                        $(this).find('i').html('&#xe62f;');
+                                        $(this).parents("tr").find(".td-status").find('span').
+                                            addClass('layui-btn-disabled').html('已冻结');
+                                        layer.msg('已冻结!', {
+                                            icon: 1,
+                                            time: 1000
+                                        });
+                                        //window.parent.location.reload();//父页面刷新
+                                        setTimeout('window.location.reload()', 500);
+                                    }
+                                    else {
+                                        layer.open({
+                                            title: '提示',
+                                            content: '冻结失败，请重新操作或联系超级管理员！',
+                                            icon: 2
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                    else {
+                        if (confirm('确认要启用' + data.Aname + '吗？', { icon: 3, title: '提示' })) {
+                            $.ajax({
+                                type: "post",
+                                url: "/SystemAccountManagement/Account_Enable",
+                                data: { "Aid": data.Aid },
+                                success: function (result) {
+                                    if (result == "OK") {
+                                        $(this).attr('title', '冻结')
+                                        $(this).find('i').html('&#xe601;');
+                                        $(this).parents("tr").find(".td-status").find('span').
+                                            removeClass('layui-btn-disabled').html('已启用');
+                                        layer.msg('已启用!', {
+                                            icon: 1,
+                                            time: 1000
+                                        });
+                                        //window.parent.location.reload();//父页面刷新
+                                        setTimeout('window.location.reload()', 500);
+                                    }
+                                    else {
+                                        layer.open({
+                                            title: '提示',
+                                            content: '启用失败，请重新操作或联系超级管理员！',
+                                            icon: 2
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            })
+        });
+        //layui数据表格自定义模板 角色栏
+        function Role(data) {
+            if (data.AOr == 1) {
+                return "总店管理员";
+            }
+            else {
+                return "分店管理员";
+            }
+        }
+        //layui数据表格自定义模板 状态栏
+        function Status(data) {
+            if (data.Account_State == true) {
+                return '<span class="layui-btn layui-btn-normal layui-btn-sm ">已启用</span>';
+            }
+            else {
+                return '<span class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled">已冻结</span>';
+            }
+        }
+        //查询
+        function Search() {
+            var name = $("#name").val();//姓名
+            var phone = $("#phone").val();//电话
+            var Account_State = $("#Account_State").val();//状态
+            var address = $("#address").val();//地址
+            layui.use('table', function () {
+                var table = layui.table;
+                //表格重载
+                table.reload('table_list', {
+                    url: '/SystemAccountManagement/Show_Searchlist'
+                    , where: {
+                        "Aname": name,
+                        "Phone": phone,
+                        "Account_state": Account_State,
+                        "DetailAddress": address
+                    }
+                });
+            })
+        }
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.ready(function () {
+                $.ajax({
+                    url: "/SystemAccountManagement/Check",
+                    success: function (result) {
+                        if (result == "总店管理员") {
+                            $("#add_Head").hide();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

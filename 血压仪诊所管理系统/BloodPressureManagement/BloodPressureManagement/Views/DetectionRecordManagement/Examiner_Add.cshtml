@@ -1,0 +1,214 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>三诺分钟诊所</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="form-wrap">
+
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">新增检测者</div>
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" action="/DetectionRecordManagement/Examiner_Add" method="post" lay-filter="component-form-group" style="border-left-width: 400px;" onsubmit="return checkIsUser()">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">账号</label>
+
+                        <div class="layui-input-block">
+                            <input type="text" name="Uacount" required autocomplete="off" placeholder="请输入" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+
+                        <div class="layui-input-block">
+                            <input type="password" name="Upwd" required autocomplete="off" placeholder="请输入" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">联系电话</label>
+
+                        <div class="layui-input-block">
+                            <input type="tel" name="phone" required lay-verify="phone" autocomplete="off" placeholder="请输入" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Usex" value="男" title="男" checked="checked">
+                            <div class="layui-unselect layui-form-radio layui-form-radioed">
+                                <i class="layui-anim layui-icon"></i>
+                                <div>男</div>
+                            </div>
+                            <input type="radio" name="Usex" value="女" title="女">
+                            <div class="layui-unselect layui-form-radio">
+                                <i class="layui-anim layui-icon"></i>
+                                <div>女</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="Uname" name="Uname" required lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" value="王五">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">年龄</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" name="Uage" type="number" placeholder="请输入" value="66">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" required name="IdentificationCard" type="text" placeholder="请输入" value="436546565456489752">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分店</label>
+                        <div class="layui-input-block">
+                            <select class="layui-icon layui-icon-down layui-font-12" id="Bid" name="Bid">
+                                @foreach (var item in ViewBag.Branch)
+                                {
+                                    <option value="@item.Bid">@item.Bnane</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">检查次数</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" required name="Number" type="number" placeholder="请输入" value="2">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">最后检查时间</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" required name="LastTime" type="text" placeholder="请输入" id="input_time">
+                        </div>
+                    </div>
+                    <div style="margin-left: 640px; margin-top: 56px; ">
+                        <button class="layui-btn" layui-submit="" type="submit" lay-filter="sreach">下一步</button> @*<a href="/DetectionRecordManagement/Examiner_Projects">下一步</a>*@
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 使用ajax在数据库中判断身份号码，是否存在
+        function checkIsUser() {
+            let flag = false;
+            let ICard = $("input[name=IdentificationCard]").val();  // 获取用户输入的身份证，用于判断此用户是否被添加
+            let Number = $("input[name=Number]").val();             // 获取用户的检测次数
+            $.ajax({
+                url: '/DetectionRecordManagement/Examiner_IsRepeater',
+                type: "GET",
+                async: false,       // ajax中的async属性，默认为true，true表示为异步，false表示同步请求，
+                                    // 如果设置为true，会继续执行ajax后面的代码，此时是2个线程
+                                    // 如果设置为false，则请求为同步请求，浏览器会被锁住，直到等待请求完成才
+                                    // 才会释放同步监视器
+                data: {
+                    "IdentificationCard": ICard,
+                    "Number": Number
+                },
+                success: function (data) {
+                    if (data == undefined) {
+                        layer.msg('error');
+                        flag = false;
+                    }
+                    // 判断是否有此用户，ok表示此用户没有被添加，否则只要更新检测次数就行，并且将输入的身份证传入到另一个控制器中
+                    if (data == "ok") {
+                        flag = true;
+                    } else {
+                        // confirm("此检测者已经被检测过，是否继续检测")
+                        layer.confirm("此检测者已经被检测过，是否继续检测？", function () {
+                            window.location.href = "/DetectionRecordManagement/Examiner_Projects?IdCard=" + ICard;
+                        })
+                        flag = false;
+                    }
+                }
+            })
+            // 有此用户就不让提交
+            if (flag) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        layui.use(['form', 'layer'], function () {
+            $ = layui.jquery;
+            var form = layui.form
+                , layer = layui.layer;
+            //自定义验证规则
+            form.verify({
+                phone: [/^1\d{10}$/, "请输入正确的手机号"]
+            });
+
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#input_time' //指定元素
+                });
+            });
+            layui.config({
+                base: '../../../layuiadmin/' //静态资源所在路径
+            }).extend({
+                index: 'lib/index' //主入口模块
+            }).use(['index', 'form', 'laydate'], function () {
+                var $ = layui.$
+                    , admin = layui.admin
+                    , element = layui.element
+                    , layer = layui.layer
+                    , laydate = layui.laydate
+                    , form = layui.form;
+
+                form.render(null, 'component-form-group');
+
+                laydate.render({
+                    elem: '#LAY-component-form-group-date'
+                });
+
+                /* 监听提交 */
+                form.on('submit(component-form-demo1)', function (data) {
+                    parent.layer.alert(JSON.stringify(data.field), {
+                        title: '最终的提交信息'
+                    })
+                    return false;
+                });
+
+            });
+        });
+    </script>
+
+
+</body>
+
+
+</html>

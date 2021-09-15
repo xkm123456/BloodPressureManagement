@@ -1,0 +1,146 @@
+﻿@model BloodPressureManagement.Models.Branch
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Branch_Edit</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/css/font.css">
+    <link rel="stylesheet" href="~/css/xadmin.css">
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="~/js/xadmin.js"></script>
+</head>
+<body>
+    <div class="x-body layui-anim layui-anim-up">
+        <form class="layui-form">
+            <font style="font-weight: bold;">编辑分店信息</font><hr />
+            <div class="layui-form-item">
+                <label for="L_StoreId" class="layui-form-label">
+                    <span class="x-red">*</span>分店编号:
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="L_StoreId" name="Bid" value="@Model.Bid" required lay-verify="number"
+                           autocomplete="off" class="layui-input" disabled="disabled">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label for="L_StoreName" class="layui-form-label">
+                    <span class="x-red">*</span>分店名称:
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="L_StoreName" name="Bnane" value="@Model.Bnane" required
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label for="L_Contact" class="layui-form-label">
+                    <span class="x-red">*</span>所属总店:
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="L_StoreName" name="Hname" value="@ViewBag.name" required
+                           autocomplete="off" class="layui-input" disabled="disabled">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_Phone" class="layui-form-label">
+                    <span class="x-red">*</span>详细地址:
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="L_Phone" name="address" value="@Model.DetailAddress" required
+                           lay-verify="required|address"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-left: 390px;">
+                <label for="L_repass" class="layui-form-label">
+                </label>
+                <button class="layui-btn" lay-filter="add" lay-submit="">
+                    保存
+                </button>
+                <button id="btn_close" class="layui-btn" lay-filter="close" lay-submit="">
+                    取消
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        layui.use(['form', 'layer'], function () {
+            $ = layui.jquery;
+            var form = layui.form
+                , layer = layui.layer;
+            //自定义总店名称验证
+            var chinese = /[u4e00-u9fa5]/;
+            var tel = /^((13[0-9])|(14[0-9])|(15[0-9])|(17[0-9])|(18[0-9]))\d{8}$/;
+            var address = /^[u4e00-u9fa5_a-zA-Z0-9]+$/;
+            form.verify({
+                Hname: function (value) {
+                    if (value != "")
+                        if (chinese.test(value)) {
+                            return '分店名称必须为中文';
+                        } else if (value.length < 6) {
+                            return '分店名称字符长度必须大于等于6';
+                        }
+                },
+                Contact: function (value) {
+                    if (value != "")
+                        if (chinese.test(value)) {
+                            return '联系人姓名必须为中文';
+                        } else if (value.length < 2) {
+                            return '联系人姓名字符长度必须大于等于2';
+                        }
+                },
+                address: function (value) {
+                    if (value != "") {
+                        if (address.test(value)) {
+                            return '地址必须为中文、数字或英文字母组成';
+                        } else if (value.lenght < 5) {
+                            return '地址字符长度必须大于等于6';
+                        }
+                    }
+                }
+            })
+
+            //监听提交
+            form.on('submit(add)', function (obj) {
+                var data = obj.field;
+                $.ajax({
+                    type: "post",
+                    url: "/ChainPharmacyManagement/Branch_Edit_Save",
+                    data: { "Bid": data.Bid, "Bnane": data.Bnane, "DetailAddress": data.address },
+                    success: function (result) {
+                        if (result == "OK") {
+                            layer.open({
+                                title: '提示',
+                                content: '保存成功',
+                                icon: 1
+                            });
+                        } else {
+                            layer.open({
+                                title: '提示',
+                                content: '保存失败',
+                                icon: 2
+                            });
+                        }
+                    }
+                })
+                return false;
+            });
+            form.on('submit(close)', function () {
+                //获得frame索引
+                var index = parent.layer.getFrameIndex(window.name)
+                //关闭当前frame
+                parent.layer.close(index);
+                window.parent.location.reload();//父页面刷新
+            })
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BloodPressureManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Account_number">
+    <Key>
+      <PropertyRef Name="Aid" />
+    </Key>
+    <Property Name="Aid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Account_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="11" Nullable="false" />
+    <Property Name="Bid" Type="int" />
+    <Property Name="Account_State" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AdminInfo">
+    <Key>
+      <PropertyRef Name="Aid" />
+    </Key>
+    <Property Name="Aid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Aacount" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Apwd" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Aname" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="AOr" Type="bit" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="11" Nullable="false" />
+    <Property Name="Bid" Type="int" />
+    <Property Name="Account_State" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Branch">
+    <Key>
+      <PropertyRef Name="Bid" />
+    </Key>
+    <Property Name="Bid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Hid" Type="int" />
+    <Property Name="Bnane" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Province" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="County" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DetailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Head_office">
+    <Key>
+      <PropertyRef Name="Hid" />
+    </Key>
+    <Property Name="Hid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Hname" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Contact" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="11" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Menu">
+    <Key>
+      <PropertyRef Name="Mid" />
+    </Key>
+    <Property Name="Mid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MenuUrl" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="MenuType" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="SuperIor" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Remarks" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Projects">
+    <Key>
+      <PropertyRef Name="Did" />
+    </Key>
+    <Property Name="Did" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Uid" Type="int" />
+    <Property Name="Dname" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Util" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="ShouSuoYa" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="ShuZhangYa" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Method" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Decipher" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Pro_Time" Type="date" />
+  </EntityType>
+  <EntityType Name="SuperAdmin">
+    <Key>
+      <PropertyRef Name="Aid" />
+    </Key>
+    <Property Name="Aid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Aacount" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Apwd" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="SysRole">
+    <Key>
+      <PropertyRef Name="Rid" />
+    </Key>
+    <Property Name="Rid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Rname" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Describle" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Remarks" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserInfo">
+    <Key>
+      <PropertyRef Name="Uid" />
+    </Key>
+    <Property Name="Uid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Uacount" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Upwd" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Uname" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Usex" Type="char" MaxLength="2" Nullable="false" />
+    <Property Name="Uage" Type="int" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="11" Nullable="false" />
+    <Property Name="IdentificationCard" Type="nvarchar" MaxLength="18" Nullable="false" />
+    <Property Name="Bid" Type="int" />
+    <Property Name="Number" Type="int" />
+    <Property Name="LastTime" Type="date" />
+  </EntityType>
+  <Association Name="FK__Account_num__Bid__4222D4EF">
+    <End Role="Branch" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="Account_number" Type="Self.Account_number" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="Bid" />
+      </Principal>
+      <Dependent Role="Account_number">
+        <PropertyRef Name="Bid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__AdminInfo__Bid__2F9A1060">
+    <End Role="Branch" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="AdminInfo" Type="Self.AdminInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="Bid" />
+      </Principal>
+      <Dependent Role="AdminInfo">
+        <PropertyRef Name="Bid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Branch__Hid__398D8EEE">
+    <End Role="Head_office" Type="Self.Head_office" Multiplicity="0..1" />
+    <End Role="Branch" Type="Self.Branch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Head_office">
+        <PropertyRef Name="Hid" />
+      </Principal>
+      <Dependent Role="Branch">
+        <PropertyRef Name="Hid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Projects__Uid__3552E9B6">
+    <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+    <End Role="Projects" Type="Self.Projects" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserInfo">
+        <PropertyRef Name="Uid" />
+      </Principal>
+      <Dependent Role="Projects">
+        <PropertyRef Name="Uid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserInfo__Bid__32767D0B">
+    <End Role="Branch" Type="Self.Branch" Multiplicity="0..1" />
+    <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branch">
+        <PropertyRef Name="Bid" />
+      </Principal>
+      <Dependent Role="UserInfo">
+        <PropertyRef Name="Bid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BloodPressureManagementModelStoreContainer">
+    <EntitySet Name="Account_number" EntityType="Self.Account_number" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AdminInfo" EntityType="Self.AdminInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Branch" EntityType="Self.Branch" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Head_office" EntityType="Self.Head_office" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Menu" EntityType="Self.Menu" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SuperAdmin" EntityType="Self.SuperAdmin" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysRole" EntityType="Self.SysRole" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Account_num__Bid__4222D4EF" Association="Self.FK__Account_num__Bid__4222D4EF">
+      <End Role="Branch" EntitySet="Branch" />
+      <End Role="Account_number" EntitySet="Account_number" />
+    </AssociationSet>
+    <AssociationSet Name="FK__AdminInfo__Bid__2F9A1060" Association="Self.FK__AdminInfo__Bid__2F9A1060">
+      <End Role="Branch" EntitySet="Branch" />
+      <End Role="AdminInfo" EntitySet="AdminInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Branch__Hid__398D8EEE" Association="Self.FK__Branch__Hid__398D8EEE">
+      <End Role="Head_office" EntitySet="Head_office" />
+      <End Role="Branch" EntitySet="Branch" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Projects__Uid__3552E9B6" Association="Self.FK__Projects__Uid__3552E9B6">
+      <End Role="UserInfo" EntitySet="UserInfo" />
+      <End Role="Projects" EntitySet="Projects" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserInfo__Bid__32767D0B" Association="Self.FK__UserInfo__Bid__32767D0B">
+      <End Role="Branch" EntitySet="Branch" />
+      <End Role="UserInfo" EntitySet="UserInfo" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
